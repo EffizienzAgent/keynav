@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/EffizienzAgent/keynav/compare/v0.1.0...v0.1.1) (2026-10-24)
+
+
+### Bug Fixes
+
+* **search:** rate limit searches per user and boot only readable sources ([f584479](https://github.com/EffizienzAgent/keynav/commit/f584479bc640e988b5a21f1384455ce4db1e675e))
+
 ## 0.1.0 (2026-10-24)
 
 
