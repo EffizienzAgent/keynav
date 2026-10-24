@@ -36,12 +36,15 @@ Default sequences:
 
 The palette searches Notes and Users by default. All searches use the normal permission checks.
 
-## Install
+## Installation
 
 ```bash
-bench get-app https://github.com/EffizienzAgent/keynav
-bench --site your.site install-app keynav
+bench get-app https://github.com/EffizienzAgent/keynav --branch version-16
+bench --site <site> install-app keynav
 ```
+
+**Compatibility:** Frappe v16. The `version-16` branch always points to the latest release; tagged releases
+and the changelog are on the [releases page](https://github.com/EffizienzAgent/keynav/releases).
 
 ## Add your own commands
 
