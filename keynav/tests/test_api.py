@@ -27,7 +27,21 @@ def only_notes(sources):
 	return {"Note": {**sources["Note"], "label": "Pages"}}
 
 
+def notes_and_error_logs(sources):
+	return {"Note": sources["Note"], "Error Log": {"title": "method"}}
+
+
 class TestSearch(IntegrationTestCase):
+	def hooked(self, path):
+		get_hooks = frappe.get_hooks
+
+		def hooks(name, *args, **kwargs):
+			if name == "keynav_search_sources":
+				return [path]
+			return get_hooks(name, *args, **kwargs)
+
+		return patch("frappe.get_hooks", side_effect=hooks)
+
 	def setUp(self):
 		self.addCleanup(frappe.set_user, "Administrator")
 		self.alice = make_user("keynav-alice@example.com", ["Desk User"])
@@ -77,6 +91,26 @@ class TestSearch(IntegrationTestCase):
 		for recent in ('{"Note": "x"}', "42", "not json", '[["Note", {"a": 1}]]', '[[["Note"], "x"]]', '"text"'):
 			self.assertEqual(api.search("", recent)["recent"], [], recent)
 
+	def test_boot_lists_only_readable_sources(self):
+		bootinfo = frappe._dict()
+		with self.hooked("keynav.tests.test_api.notes_and_error_logs"):
+			with self.set_user(self.alice):
+				api.boot(bootinfo)
+			self.assertEqual([s["doctype"] for s in bootinfo.keynav["sources"]], ["Note"])
+			api.boot(bootinfo)
+			self.assertEqual([s["doctype"] for s in bootinfo.keynav["sources"]], ["Note", "Error Log"])
+
+	def test_requests_are_rate_limited_per_user(self):
+		frappe.cache.delete_value(f"keynav:search:{self.alice}")
+		frappe.cache.delete_value(f"keynav:search:{self.bob}")
+		with patch("frappe.request", True), self.set_user(self.alice):
+			for _ in range(api.RATE_LIMIT):
+				api.search("")
+			with self.assertRaises(frappe.RateLimitExceededError):
+				api.search("")
+		with patch("frappe.request", True), self.set_user(self.bob):
+			api.search("")
+
 	def test_like_wildcards_are_literal(self):
 		token = frappe.generate_hash(length=10)
 		percent = make_note(f"{token} 100% off")
@@ -86,14 +120,7 @@ class TestSearch(IntegrationTestCase):
 	def test_hook_replaces_sources(self):
 		token = frappe.generate_hash(length=10)
 		make_note(token)
-		get_hooks = frappe.get_hooks
-
-		def hooks(name, *args, **kwargs):
-			if name == "keynav_search_sources":
-				return ["keynav.tests.test_api.only_notes"]
-			return get_hooks(name, *args, **kwargs)
-
-		with patch("frappe.get_hooks", side_effect=hooks):
+		with self.hooked("keynav.tests.test_api.only_notes"):
 			self.assertEqual(list(api.get_sources()), ["Note"])
 			self.assertEqual(list(api.search(token)["groups"]), ["Note"])
 			bootinfo = frappe._dict()

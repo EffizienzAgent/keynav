@@ -1,8 +1,11 @@
 import frappe
+from frappe import _
 
 LIMIT = 5
 CANDIDATES = 20
 MAX_RECENT = 10
+RATE_LIMIT = 60
+RATE_WINDOW = 10
 
 DEFAULT_SOURCES = {
 	"Note": {"title": "title", "label": "Notes", "detail": "modified", "date": True},
@@ -28,6 +31,7 @@ def boot(bootinfo):
 		"sources": [
 			{"doctype": doctype, "label": source.get("label", doctype), "date": bool(source.get("date"))}
 			for doctype, source in get_sources().items()
+			if readable(doctype)
 		]
 	}
 
@@ -119,8 +123,20 @@ def resolve_recent(recent, sources):
 	return [found[ref] for ref in refs if ref in found]
 
 
+def check_rate_limit():
+	if not frappe.request:
+		return
+	key = frappe.cache.make_key(f"keynav:search:{frappe.session.user}")
+	count = frappe.cache.incrby(key, 1)
+	if count == 1:
+		frappe.cache.expire(key, RATE_WINDOW)
+	if count > RATE_LIMIT:
+		frappe.throw(_("Too many searches. Please wait a few seconds."), frappe.RateLimitExceededError)
+
+
 @frappe.whitelist()
 def search(query: str = "", recent=None) -> dict:
+	check_rate_limit()
 	query = (query or "").strip()[:100]
 	sources = get_sources()
 	groups = {}
