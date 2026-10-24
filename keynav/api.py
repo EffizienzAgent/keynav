@@ -93,11 +93,19 @@ def search_doctype(doctype, query, sources=None):
 	return [as_result(doctype, row) for row in ranked[:LIMIT]]
 
 
+def parse_refs(recent):
+	try:
+		refs = frappe.parse_json(recent)
+	except ValueError:
+		return []
+	return refs if isinstance(refs, list) else []
+
+
 def resolve_recent(recent, sources):
 	refs = [
 		(r[0], r[1])
-		for r in (frappe.parse_json(recent) or [])[:MAX_RECENT]
-		if isinstance(r, list | tuple) and len(r) == 2 and r[0] in sources
+		for r in parse_refs(recent)[:MAX_RECENT]
+		if isinstance(r, list | tuple) and len(r) == 2 and all(isinstance(x, str) for x in r) and r[0] in sources
 	]
 	by_doctype = {}
 	for doctype, name in refs:

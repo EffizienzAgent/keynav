@@ -73,6 +73,10 @@ class TestSearch(IntegrationTestCase):
 		result = api.search("", frappe.as_json(recent))
 		self.assertEqual([r["name"] for r in result["recent"]], [second.name, first.name])
 
+	def test_malformed_recent_is_ignored(self):
+		for recent in ('{"Note": "x"}', "42", "not json", '[["Note", {"a": 1}]]', '[[["Note"], "x"]]', '"text"'):
+			self.assertEqual(api.search("", recent)["recent"], [], recent)
+
 	def test_like_wildcards_are_literal(self):
 		token = frappe.generate_hash(length=10)
 		percent = make_note(f"{token} 100% off")
