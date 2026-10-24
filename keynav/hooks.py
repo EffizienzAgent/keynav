@@ -4,3 +4,7 @@ app_publisher = "EffizienzAgent"
 app_description = "Keyboard navigation for the Frappe Framework"
 app_email = "info@effizienzagent.de"
 app_license = "mit"
+
+app_include_js = "keynav.bundle.js"
+app_include_css = "keynav.bundle.css"
+extend_bootinfo = "keynav.api.boot"
