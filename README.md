@@ -128,10 +128,9 @@ node --test 'keynav/**/*.test.mjs'
 bench --site your.site run-tests --app keynav
 ```
 
-## Help with the setup
+## Professional setup & support
 
-If you want Keynav or other workflow tools set up for your company, see
-[mittelstandshub.de](https://mittelstandshub.de).
+Need help setting this up or integrating it into your Frappe stack? Write to oss@effizienzagent.de (English or German). German-speaking SMEs: see [mittelstandshub.de](https://mittelstandshub.de).
 
 ## License
 
