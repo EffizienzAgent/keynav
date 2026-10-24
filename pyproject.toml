@@ -1,7 +1,7 @@
 [project]
 name = "keynav"
 authors = [
-    { name = "EffizienzAgent", email = "info@effizienzagent.de"}
+    { name = "EffizienzAgent", email = "oss@effizienzagent.de"}
 ]
 description = "Keyboard navigation for the Frappe Framework"
 requires-python = ">=3.14"
