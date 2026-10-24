@@ -18,21 +18,21 @@ test("default sequence keys are unique", () => {
 });
 
 test("route commands get an id, a route and a url", () => {
-	const command = normalize({ label: "Deals", route: ["List", "Deal"], filters: { stage: "Won" } });
-	assert.equal(command.id, "go:List/Deal");
-	assert.equal(command.label, "t:Deals");
-	assert.equal(command.url(), "/desk/List/Deal?stage=Won");
+	const command = normalize({ label: "Notes", route: ["List", "Note"], filters: { public: 1 } });
+	assert.equal(command.id, "go:List/Note");
+	assert.equal(command.label, "t:Notes");
+	assert.equal(command.url(), "/desk/List/Note?public=1");
 	command.run();
-	assert.deepEqual(routes.pop(), ["List", "Deal", { stage: "Won" }]);
+	assert.deepEqual(routes.pop(), ["List", "Note", { public: 1 }]);
 });
 
 test("doctype commands create a new document unless they bring their own run", () => {
-	normalize({ label: "New Deal", doctype: "Deal" }).run();
-	assert.deepEqual(routes.pop(), ["new", "Deal"]);
+	normalize({ label: "New Note", doctype: "Note" }).run();
+	assert.deepEqual(routes.pop(), ["new", "Note"]);
 	let ran = false;
-	normalize({ label: "New Deal", doctype: "Deal", run: () => (ran = true) }).run();
+	normalize({ label: "New Note", doctype: "Note", run: () => (ran = true) }).run();
 	assert.equal(ran, true);
-	assert.equal(normalize({ label: "x", doctype: "Deal" }).id, "new:Deal");
+	assert.equal(normalize({ label: "x", doctype: "Note" }).id, "new:Note");
 });
 
 test("host apps replace the defaults and keep the help commands", () => {

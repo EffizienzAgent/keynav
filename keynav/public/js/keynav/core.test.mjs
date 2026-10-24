@@ -78,28 +78,28 @@ test("sequences expire and restart", () => {
 });
 
 test("score orders exact, prefix, word, substring, fuzzy", () => {
-	const s = (t) => score("deal", t);
-	assert.ok(s("Deal") > s("Deals"));
-	assert.ok(s("Deals") > s("Neuer Deal"));
-	assert.ok(s("Neuer Deal") > s("Ideal"));
-	assert.ok(s("Ideal") > s("D-e-a-l"));
-	assert.equal(score("xyz", "Deal"), 0);
+	const s = (t) => score("note", t);
+	assert.ok(s("Note") > s("Notes"));
+	assert.ok(s("Notes") > s("New Note"));
+	assert.ok(s("New Note") > s("Denote"));
+	assert.ok(s("Denote") > s("N-o-t-e"));
+	assert.equal(score("xyz", "Note"), 0);
 	assert.equal(score("", "anything"), 1);
 });
 
 test("rank filters, sorts stably and limits", () => {
-	const items = ["Meetings", "Meeting anlegen", "Firmen", "Termine"];
+	const items = ["Notes", "Note settings", "Users", "ToDo"];
 	assert.deepEqual(
-		rank("mee", items, (x) => x),
-		["Meetings", "Meeting anlegen"]
+		rank("not", items, (x) => x),
+		["Notes", "Note settings"]
 	);
 	assert.deepEqual(
 		rank("", items, (x) => x, 2),
-		["Meetings", "Meeting anlegen"]
+		["Notes", "Note settings"]
 	);
 	assert.deepEqual(
-		rank("mt anl", items, (x) => x),
-		["Meeting anlegen"]
+		rank("nt set", items, (x) => x),
+		["Note settings"]
 	);
 });
 
@@ -113,16 +113,16 @@ test("step clamps and starts at the ends", () => {
 
 test("recent_refs returns newest distinct forms of known doctypes", () => {
 	const history = [
-		["Form", "Organization", "ORG-1"],
-		["List", "Organization"],
-		["Form", "Note", "N-1"],
-		["Form", "Deal", "new-deal-1"],
-		["Form", "Contact", "C-1"],
-		["Form", "Organization", "ORG-1"],
+		["Form", "Note", "n-1"],
+		["List", "Note"],
+		["Form", "File", "f-1"],
+		["Form", "ToDo", "new-todo-1"],
+		["Form", "User", "jane"],
+		["Form", "Note", "n-1"],
 	];
-	assert.deepEqual(recent_refs(history, ["Organization", "Contact", "Deal"]), [
-		["Organization", "ORG-1"],
-		["Contact", "C-1"],
+	assert.deepEqual(recent_refs(history, ["Note", "User", "ToDo"]), [
+		["Note", "n-1"],
+		["User", "jane"],
 	]);
 });
 
@@ -136,14 +136,14 @@ test("non-text inputs are not typing targets", () => {
 
 test("a new query drops stale records at once and ignores late answers", () => {
 	const state = new PaletteState();
-	const first = state.set_query("acme");
-	assert.equal(state.accept_records(first, { Organization: ["old"] }), true);
-	const second = state.set_query("acme gm");
+	const first = state.set_query("plan");
+	assert.equal(state.accept_records(first, { Note: ["old"] }), true);
+	const second = state.set_query("plan q");
 	assert.deepEqual(state.records, {});
-	assert.equal(state.accept_records(first, { Organization: ["stale"] }), false);
+	assert.equal(state.accept_records(first, { Note: ["stale"] }), false);
 	assert.deepEqual(state.records, {});
-	assert.equal(state.accept_records(second, { Organization: ["new"] }), true);
-	assert.deepEqual(state.records, { Organization: ["new"] });
+	assert.equal(state.accept_records(second, { Note: ["new"] }), true);
+	assert.deepEqual(state.records, { Note: ["new"] });
 });
 
 test("typing never cancels the recent request", () => {
@@ -163,7 +163,7 @@ test("closing invalidates every pending answer", () => {
 	const query = state.set_query("x");
 	state.close();
 	assert.equal(state.accept_recent(recent, ["r"]), false);
-	assert.equal(state.accept_records(query, { Deal: [] }), false);
+	assert.equal(state.accept_records(query, { ToDo: [] }), false);
 });
 
 test("visible applies the score threshold to every list", () => {

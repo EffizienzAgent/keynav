@@ -4,8 +4,8 @@ import { canonical_url, escape_link_text, markdown_link, view_title } from "./li
 
 test("markdown_link escapes brackets and backslashes in the title", () => {
 	assert.equal(
-		markdown_link("Deal: [Q4] a\\b", "https://erp.example.com/app/deal/D-1"),
-		"[Deal: \\[Q4\\] a\\\\b](https://erp.example.com/app/deal/D-1)"
+		markdown_link("ToDo: [Q4] a\\b", "https://erp.example.com/app/todo/T-1"),
+		"[ToDo: \\[Q4\\] a\\\\b](https://erp.example.com/app/todo/T-1)"
 	);
 });
 
@@ -21,22 +21,22 @@ test("url parentheses and spaces cannot end the link early", () => {
 test("canonical_url drops the hash and keeps filters", () => {
 	const location = {
 		origin: "https://erp.example.com",
-		pathname: "/app/deal/view/kanban/Sales-Pipeline",
-		search: "?stage=Won",
+		pathname: "/app/todo/view/kanban/Backlog",
+		search: "?status=Open",
 		hash: "#details",
 	};
 	assert.equal(
 		canonical_url(location),
-		"https://erp.example.com/app/deal/view/kanban/Sales-Pipeline?stage=Won"
+		"https://erp.example.com/app/todo/view/kanban/Backlog?status=Open"
 	);
 });
 
 test("view_title per view type", () => {
-	const base = { doctype_label: "Company", view_label: "Kanban", fallback: "Doc" };
-	const form = { ...base, route: ["Form", "Customer", "CUST-1"], record_title: "Acme" };
-	assert.equal(view_title(form), "Company: Acme");
-	assert.equal(view_title({ ...base, route: ["List", "Deal", "Kanban"] }), "Company (Kanban)");
+	const base = { doctype_label: "ToDo", view_label: "Kanban", fallback: "Doc" };
+	const form = { ...base, route: ["Form", "ToDo", "T-1"], record_title: "Write release notes" };
+	assert.equal(view_title(form), "ToDo: Write release notes");
+	assert.equal(view_title({ ...base, route: ["List", "ToDo", "Kanban"] }), "ToDo (Kanban)");
 	assert.equal(view_title({ ...base, route: ["reports"], page_title: "Reports" }), "Reports");
 	assert.equal(view_title({ ...base, route: ["Workspaces", "Home"] }), "Doc");
-	assert.equal(view_title({ ...base, route: ["Form", "Deal", "new-deal-1"] }), "Doc");
+	assert.equal(view_title({ ...base, route: ["Form", "ToDo", "new-todo-1"] }), "Doc");
 });
