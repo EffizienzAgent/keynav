@@ -120,6 +120,9 @@ def search_sources(sources):
 | `date` | `True` if `detail` is a date or datetime. |
 | `label` | Heading of the result group. |
 | `filters` | Filters that always apply. |
+| `fields` | More fields to load for `format`. |
+| `format` | Dotted path to `format(row)`. Returns keys that replace the result's `title` or `detail`. |
+| `search_function` | Dotted path to `search_function(doctype, query, source)`. Returns the results instead of the built-in search; `keynav.api.rows` and `as_result` help. |
 
 Return a dict without the defaults to drop them. The palette shows the groups in the order of the
 dict and at most five records per group.

@@ -31,6 +31,23 @@ def notes_and_error_logs(sources):
 	return {"Note": sources["Note"], "Error Log": {"title": "method"}}
 
 
+def formatted_notes(sources):
+	return {"Note": {**sources["Note"], "fields": ("public",), "format": "keynav.tests.test_api.note_format"}}
+
+
+def note_format(row):
+	return {"title": row.title.upper(), "detail": "public" if row.public else "private"}
+
+
+def custom_notes(sources):
+	return {"Note": {**sources["Note"], "search_function": "keynav.tests.test_api.oldest_first"}}
+
+
+def oldest_first(doctype, query, source):
+	rows = api.rows(doctype, source, {"title": ["like", f"%{api.escape_like(query)}%"]}, limit=10)
+	return [api.as_result(doctype, row, source) for row in reversed(rows)]
+
+
 class TestSearch(IntegrationTestCase):
 	def hooked(self, path):
 		get_hooks = frappe.get_hooks
@@ -128,3 +145,19 @@ class TestSearch(IntegrationTestCase):
 		self.assertEqual(
 			bootinfo.keynav["sources"], [{"doctype": "Note", "label": "Pages", "date": True}]
 		)
+
+	def test_format_replaces_title_and_detail_in_search_and_recent(self):
+		token = frappe.generate_hash(length=10)
+		note = make_note(f"{token} plan", public=0)
+		with self.hooked("keynav.tests.test_api.formatted_notes"):
+			[row] = api.search(token)["groups"]["Note"]
+			[recent] = api.search("", frappe.as_json([["Note", note.name]]))["recent"]
+		self.assertEqual((row["title"], row["detail"]), (f"{token} plan".upper(), "private"))
+		self.assertEqual(recent, row)
+
+	def test_search_function_replaces_builtin_search(self):
+		token = frappe.generate_hash(length=10)
+		notes = [make_note(f"x {token} {i}") for i in range(7)]
+		with self.hooked("keynav.tests.test_api.custom_notes"):
+			found = names(api.search(token), "Note")
+		self.assertEqual(found, [n.name for n in notes][: api.LIMIT])
