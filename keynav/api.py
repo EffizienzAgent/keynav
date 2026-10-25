@@ -55,6 +55,7 @@ def rows(doctype, source, filters=None, or_filters=None, limit=LIMIT):
 	fields = ["name", f"{title_field(source)} as title"]
 	if source.get("detail"):
 		fields.append(f"{source['detail']} as detail")
+	fields.extend(source.get("fields", ()))
 	return frappe.get_list(
 		doctype,
 		fields=fields,
@@ -65,11 +66,14 @@ def rows(doctype, source, filters=None, or_filters=None, limit=LIMIT):
 	)
 
 
-def as_result(doctype, row):
+def as_result(doctype, row, source=None):
 	detail = row.get("detail")
 	if detail is not None and not isinstance(detail, str):
 		detail = str(detail)
-	return {"doctype": doctype, "name": row.name, "title": row.title or row.name, "detail": detail}
+	result = {"doctype": doctype, "name": row.name, "title": row.title or row.name, "detail": detail}
+	if source and source.get("format"):
+		result.update(frappe.get_attr(source["format"])(row))
+	return result
 
 
 def readable(doctype):
@@ -82,6 +86,8 @@ def escape_like(text: str) -> str:
 
 def search_doctype(doctype, query, sources=None):
 	source = (sources or get_sources())[doctype]
+	if source.get("search_function"):
+		return frappe.get_attr(source["search_function"])(doctype, query, source)[:LIMIT]
 	title, base = title_field(source), source.get("filters", {})
 	pattern = escape_like(query)
 	fields = dict.fromkeys(("name", title, *source.get("search", ())))
@@ -94,7 +100,7 @@ def search_doctype(doctype, query, sources=None):
 		for row in rows(doctype, source, {**base, **filters}, or_filters, CANDIDATES):
 			found.setdefault(row.name, row)
 	ranked = sorted(found.values(), key=lambda row: rank(query, row.title or row.name))
-	return [as_result(doctype, row) for row in ranked[:LIMIT]]
+	return [as_result(doctype, row, source) for row in ranked[:LIMIT]]
 
 
 def parse_refs(recent):
@@ -119,7 +125,7 @@ def resolve_recent(recent, sources):
 		if not readable(doctype):
 			continue
 		for row in rows(doctype, sources[doctype], filters={"name": ["in", names]}, limit=len(names)):
-			found[(doctype, row.name)] = as_result(doctype, row)
+			found[(doctype, row.name)] = as_result(doctype, row, sources[doctype])
 	return [found[ref] for ref in refs if ref in found]
 
 
