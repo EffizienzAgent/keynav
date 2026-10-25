@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/EffizienzAgent/keynav/compare/v0.1.1...v0.2.0) (2026-10-25)
+
+
+### Features
+
+* let sources format results and bring their own search ([3321de2](https://github.com/EffizienzAgent/keynav/commit/3321de25d7488dcedcb8cfb0d206eae84df8c071))
+
 ## [0.1.1](https://github.com/EffizienzAgent/keynav/compare/v0.1.0...v0.1.1) (2026-10-24)
 
 
