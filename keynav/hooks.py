@@ -1,6 +1,6 @@
 app_name = "keynav"
 app_title = "Keynav"
-app_publisher = "EffizienzAgent"
+app_publisher = "EffizienzAgent (Tobias Mende)"
 app_description = "Keyboard navigation for the Frappe Framework"
 app_email = "oss@effizienzagent.de"
 app_license = "mit"
