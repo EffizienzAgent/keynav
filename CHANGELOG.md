@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.3](https://github.com/EffizienzAgent/keynav/compare/v0.2.2...v0.2.3) (2026-10-26)
+
+
+### Documentation
+
+* add README screenshots generated from a local demo stack ([253e367](https://github.com/EffizienzAgent/keynav/commit/253e367c6b911053a4fc94e595779fcaed9757d7))
+* add README screenshots generated from a local demo stack ([f7933ca](https://github.com/EffizienzAgent/keynav/commit/f7933ca277b3caaead11c8fd39b9d7312c4268d2))
+
 ## [0.2.2](https://github.com/EffizienzAgent/keynav/compare/v0.2.1...v0.2.2) (2026-10-26)
 
 
