@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/EffizienzAgent/keynav/compare/v0.2.1...v0.2.2) (2026-10-26)
+
+
+### Bug Fixes
+
+* highlight the focused global search row ([f9298a0](https://github.com/EffizienzAgent/keynav/commit/f9298a09f745ad8fe6596a58a27413b17f1dc73a))
+
 ## [0.2.1](https://github.com/EffizienzAgent/keynav/compare/v0.2.0...v0.2.1) (2026-10-26)
 
 
