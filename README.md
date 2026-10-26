@@ -5,6 +5,8 @@ Keyboard navigation for the Frappe Framework
 Keynav adds a command palette, two-key sequences and list navigation to the desk.
 It works with Frappe v16 and ships with English and German texts.
 
+![Command palette with commands, notes and users](docs/screenshots/palette-search.png)
+
 ## Features
 
 - **Command palette** (`Cmd+.` on Mac, `Ctrl+.` elsewhere): run commands and search records.
@@ -19,6 +21,16 @@ It works with Frappe v16 and ships with English and German texts.
 - **Copy link** (`Cmd+Shift+C`, Mac only; elsewhere from the palette): copies the current view as a
   Markdown link `[Title](URL)`.
 - `?` shows all shortcuts, including the ones the desk already has.
+
+After `g`, the hint at the bottom shows where you can go:
+
+![Sequence hint after pressing g](docs/screenshots/sequence-hint.png)
+
+| Recently opened records | List navigation with `j` / `k` / `x` |
+| --- | --- |
+| ![Palette with recently opened records](docs/screenshots/palette.png) | ![ToDo list with a selected row](docs/screenshots/list-navigation.png) |
+| **Global Search with keyboard focus and filter keys** | **All shortcuts with `?`** |
+| ![Global Search with a focused result](docs/screenshots/global-search.png) | ![Keyboard shortcuts dialog](docs/screenshots/shortcuts.png) |
 
 Default sequences:
 
@@ -133,6 +145,16 @@ dict and at most five records per group.
 node --test 'keynav/**/*.test.mjs'
 bench --site your.site run-tests --app keynav
 ```
+
+A local stack with demo data runs in Docker. It also regenerates the screenshots in `docs/screenshots`:
+
+```bash
+docker compose -f dev/compose.yaml up -d
+docker compose -f dev/compose.yaml exec bench bash /workspace/keynav/dev/bootstrap.sh
+dev/screenshots.sh
+```
+
+`dev/serve.sh` (inside the bench container) serves the desk on http://localhost:8010, login `Administrator` / `admin`.
 
 ## Professional setup & support
 
