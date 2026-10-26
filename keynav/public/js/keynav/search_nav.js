@@ -2,6 +2,7 @@ import { chip_index, search_action, search_list_mode, SEARCH_MOVES, step } from 
 
 const LIST_MODE = "keynav-search-list-mode";
 const GLOBAL_RESULTS = "a.global-search-name-link:visible, a.result-section-link:visible";
+const OPEN_DIALOG = ".search-dialog.show:not(.modal-minimize)";
 const FILTER_CHIPS = [".global-search-filter-pill", ".global-search-more-trigger"]
 	.map((chip) => `.global-search-visible-pills ${chip}:visible`)
 	.join(", ");
@@ -64,7 +65,7 @@ function focus_result(link) {
 
 function filter_chip_key(e) {
 	const index = chip_index(e);
-	const dialog = document.querySelector(".search-dialog.show");
+	const dialog = document.querySelector(OPEN_DIALOG);
 	if (index === -1 || !dialog) return false;
 	consume(e);
 	const chip = $(dialog).find(FILTER_CHIPS).get(index);
@@ -83,10 +84,10 @@ function on_keydown(e) {
 		return;
 	}
 	if (active === document.body) {
-		const input = document.querySelector(".search-dialog.show .search-input");
+		const input = document.querySelector(`${OPEN_DIALOG} .search-input`);
 		if (input) input.focus();
 	}
-	const dialog = document.activeElement?.closest?.(".search-dialog.show");
+	const dialog = document.activeElement?.closest?.(OPEN_DIALOG);
 	if (dialog) global_search_key(e, dialog);
 }
 
@@ -94,6 +95,15 @@ function on_awesomplete_close(e) {
 	e.target.closest?.(".awesomplete")?.classList.remove(LIST_MODE);
 }
 
+function close_search_on_navigation() {
+	const minimize_open_dialog = frappe.ui.hide_open_dialog;
+	frappe.ui.hide_open_dialog = () => {
+		if (window.cur_dialog?.$wrapper?.hasClass("search-dialog")) cur_dialog.hide();
+		else minimize_open_dialog();
+	};
+}
+
+close_search_on_navigation();
 document.documentElement.classList.toggle("keynav-mac", frappe.utils.is_mac());
 window.addEventListener("keydown", on_keydown, true);
 document.addEventListener("awesomplete-close", on_awesomplete_close);
