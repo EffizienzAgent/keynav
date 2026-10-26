@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/EffizienzAgent/keynav/compare/v0.2.0...v0.2.1) (2026-10-26)
+
+
+### Bug Fixes
+
+* close global search when opening a result ([50b3b32](https://github.com/EffizienzAgent/keynav/commit/50b3b32311226acd42f097b32da8d2bbeb7a6557))
+
 ## [0.2.0](https://github.com/EffizienzAgent/keynav/compare/v0.1.1...v0.2.0) (2026-10-25)
 
 
