@@ -73,7 +73,20 @@
 	box-shadow: inset 0 0 0 1px var(--primary);
 }
 
-.search-dialog .global-search-name-link:focus,
+.search-dialog
+	.search-results
+	.list-item-table.global-search-results-list
+	> .list-row-container:has(.global-search-name-link:focus) {
+	background-color: var(--highlight-color);
+	box-shadow: inset 3px 0 0 var(--primary);
+}
+
+.search-dialog .global-search-name-link:focus {
+	outline: none;
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
 .search-dialog .result-section-link:focus {
 	outline: 2px solid var(--primary);
 	outline-offset: 2px;
