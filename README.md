@@ -1,5 +1,7 @@
 Keyboard navigation for the Frappe Framework
 
+<img src="docs/images/logo.png" alt="" width="96" align="right">
+
 # Keynav
 
 Keynav adds a command palette, two-key sequences and list navigation to the desk.
