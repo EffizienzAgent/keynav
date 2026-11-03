@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.0](https://github.com/EffizienzAgent/keynav/compare/v0.2.2...v0.3.0) (2026-11-03)
+
+
+### Features
+
+* add app icon ([102f7b0](https://github.com/EffizienzAgent/keynav/commit/102f7b00a77ab28a8d80ef7ef2006ed1501ed332))
+
+
+### Documentation
+
+* add app logo ([d10640b](https://github.com/EffizienzAgent/keynav/commit/d10640bc5fd16513a4bb192aafdae0e2bc26beda))
+* add README screenshots generated from a local demo stack ([253e367](https://github.com/EffizienzAgent/keynav/commit/253e367c6b911053a4fc94e595779fcaed9757d7))
+* add README screenshots generated from a local demo stack ([f7933ca](https://github.com/EffizienzAgent/keynav/commit/f7933ca277b3caaead11c8fd39b9d7312c4268d2))
+
 ## [0.2.2](https://github.com/EffizienzAgent/keynav/compare/v0.2.1...v0.2.2) (2026-10-26)
 
 
