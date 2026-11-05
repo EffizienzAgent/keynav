@@ -5,7 +5,6 @@
 
 ### Bug Fixes
 
-* reset the filter button count on Shift+X ([100062e](https://github.com/EffizienzAgent/keynav/commit/100062eb425c8ac9b9b21d2522187451a3a10883))
 * reset the filter button count on Shift+X ([daaba38](https://github.com/EffizienzAgent/keynav/commit/daaba38e745794567d586239320374ddd4d821f5))
 
 ## [0.4.0](https://github.com/EffizienzAgent/keynav/compare/v0.3.0...v0.4.0) (2026-11-05)
