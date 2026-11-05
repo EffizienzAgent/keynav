@@ -34,6 +34,8 @@ Select next / previous row,Nächste / vorherige Zeile auswählen
 Open selected row,Ausgewählte Zeile öffnen
 Toggle row checkbox,Zeile an- / abhaken
 Focus list filter,Listenfilter fokussieren
+Clear the focused filter field,Fokussiertes Filterfeld leeren
+Clear all filters,Alle Filter zurücksetzen
 Forms,Formulare
 "Search: command palette, Awesomebar, Global Search","Suche: Befehlspalette, Awesomebar, Globale Suche"
 Create,Anlegen
