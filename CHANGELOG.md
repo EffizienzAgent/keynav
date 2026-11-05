@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.0](https://github.com/EffizienzAgent/keynav/compare/v0.3.0...v0.4.0) (2026-11-05)
+
+
+### Features
+
+* clear list filters with Esc and Shift+X ([2b5ff4d](https://github.com/EffizienzAgent/keynav/commit/2b5ff4dfaa564e46c49d3a8ed19dc2fba105c9a7))
+* clear list filters with Esc and Shift+X ([0f34cd6](https://github.com/EffizienzAgent/keynav/commit/0f34cd62409a1fc8c8fb2d0176f1228be71be06a))
+
 ## [0.3.0](https://github.com/EffizienzAgent/keynav/compare/v0.2.2...v0.3.0) (2026-11-03)
 
 
