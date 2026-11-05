@@ -5,7 +5,7 @@ import { keys_html } from "./labels";
 import { Palette } from "./palette";
 import "./search_nav";
 
-const LIST_KEYS = new Set(["j", "k", "x", "/"]);
+const LIST_KEYS = new Set(["j", "k", "x", "/", "shift+x"]);
 const HIDDEN_FRAPPE_SHORTCUTS = new Set(["ctrl+s", "shift+/"]);
 
 export const palette = new Palette();
@@ -58,11 +58,16 @@ function save_form() {
 	return true;
 }
 
-function current_list() {
+function list_view() {
 	const list = window.cur_list;
 	const [view, doctype] = frappe.get_route();
 	if (!list || view !== "List" || list.view !== "List" || list.doctype !== doctype) return null;
-	return list.$result?.is(":visible") ? list : null;
+	return list;
+}
+
+function current_list() {
+	const list = list_view();
+	return list?.$result?.is(":visible") ? list : null;
 }
 
 function list_rows(list) {
@@ -97,13 +102,33 @@ function focus_filter(list) {
 	$input.first().trigger("focus");
 }
 
+function focused_filter_field(list) {
+	const input = document.activeElement;
+	if (!is_typing_target(input) || !list.page.page_form[0]?.contains(input)) return null;
+	if ($(input).closest(".awesomplete").find("ul:not([hidden])").length) return null;
+	return Object.values(list.page.fields_dict).find((f) => f.$wrapper?.[0]?.contains(input));
+}
+
+function clear_filter_field() {
+	const list = list_view();
+	const field = list && focused_filter_field(list);
+	if (!field?.get_value()) return false;
+	field.set_value("");
+	return true;
+}
+
+function handle_filter_key(key) {
+	const list = list_view();
+	if (!list) return false;
+	if (key === "/") focus_filter(list);
+	else list.filter_area?.clear();
+	return true;
+}
+
 function handle_list_key(key) {
+	if (key === "/" || key === "shift+x") return handle_filter_key(key);
 	const list = current_list();
 	if (!list) return false;
-	if (key === "/") {
-		focus_filter(list);
-		return true;
-	}
 	const rows = list_rows(list);
 	if (!rows.length) return true;
 	const index = selected_index(list, rows);
@@ -163,6 +188,7 @@ function on_keydown(e) {
 	if (key === "esc") {
 		commands().reset();
 		hide_hint();
+		if (clear_filter_field()) consume(e);
 		return;
 	}
 	if (e.repeat || is_typing_target(document.activeElement) || dialog_open()) return;
@@ -265,6 +291,8 @@ function shortcuts_html() {
 			[keys_html(["enter"]), __("Open selected row")],
 			[keys_html(["x"]), __("Toggle row checkbox")],
 			[keys_html(["/"]), __("Focus list filter")],
+			[keys_html(["esc"]), __("Clear the focused filter field")],
+			[keys_html(["shift+x"]), __("Clear all filters")],
 		]),
 		section(__("Forms"), [
 			[`${keys_html(["mod+s"])} / ${keys_html(["mod+enter"])}`, __("Save")],

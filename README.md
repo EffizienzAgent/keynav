@@ -16,7 +16,7 @@ It works with Frappe v16 and ships with English and German texts.
 - **Sequences**: press `g` then a letter to go somewhere, `c` then a letter to create something.
   A hint at the bottom shows the possible second keys.
 - **Lists**: `j` / `k` select the next / previous row, `Enter` opens it, `x` toggles its checkbox,
-  `/` focuses the list filter.
+  `/` focuses the list filter, `Esc` clears the focused filter field and `Shift+X` clears all filters.
 - **Forms**: `Cmd/Ctrl+Enter` saves.
 - **Search**: arrow keys, `Tab`, `j` / `k` and (on Mac) `Ctrl+J/K/N/P` move through the results of
   the palette, the Awesomebar and the Global Search. `Cmd/Ctrl+1` to `9` picks a Global Search filter.
