@@ -121,7 +121,7 @@ function handle_filter_key(key) {
 	const list = list_view();
 	if (!list) return false;
 	if (key === "/") focus_filter(list);
-	else list.filter_area?.clear();
+	else list.filter_area?.filter_x_button?.trigger("click");
 	return true;
 }
 
