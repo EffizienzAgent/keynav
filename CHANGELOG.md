@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.0](https://github.com/EffizienzAgent/keynav/compare/v0.4.1...v0.5.0) (2026-11-06)
+
+
+### Features
+
+* open and apply the filter popover from the keyboard ([63d4083](https://github.com/EffizienzAgent/keynav/commit/63d4083ce872709b5c31e3a14882ce4ed8c14f7a))
+* open and apply the filter popover from the keyboard ([a8655a3](https://github.com/EffizienzAgent/keynav/commit/a8655a3046ee88d47e0acb32f3c8bd2909e93e00))
+
 ## [0.4.1](https://github.com/EffizienzAgent/keynav/compare/v0.4.0...v0.4.1) (2026-11-05)
 
 
