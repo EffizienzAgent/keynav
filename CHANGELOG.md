@@ -5,7 +5,6 @@
 
 ### Features
 
-* add a filter row with Shift+Enter ([e34b310](https://github.com/EffizienzAgent/keynav/commit/e34b31009312d4d26243fdcea86d942522173f8c))
 * add a filter row with Shift+Enter ([8e7a61a](https://github.com/EffizienzAgent/keynav/commit/8e7a61a604f8e0eb3749f2ddff6dc59fa7bb8a97))
 
 ## [0.5.0](https://github.com/EffizienzAgent/keynav/compare/v0.4.1...v0.5.0) (2026-11-06)
