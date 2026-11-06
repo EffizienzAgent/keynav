@@ -125,13 +125,23 @@ function filter_popover_open() {
 	return filter_group()?.wrapper?.is(":visible") || false;
 }
 
+function select_last_filter_field(group) {
+	group.filters.at(-1)?.fieldselect?.$input?.trigger("focus").trigger("select");
+}
+
 function open_filter_popover(group) {
-	const had_filters = group.filters.length > 0;
-	group.filter_button.one("shown.bs.popover", () => {
-		if (had_filters) group.wrapper.find(".add-filter").trigger("click");
-		group.filters.at(-1)?.fieldselect?.$input?.trigger("focus").trigger("select");
-	});
+	if (!group.filters.length) {
+		group.filter_button.one("shown.bs.popover", () => select_last_filter_field(group));
+	}
 	group.filter_button.trigger("click");
+}
+
+function add_filter_row() {
+	if (!filter_popover_open()) return false;
+	const group = filter_group();
+	group.wrapper.find(".add-filter").trigger("click");
+	select_last_filter_field(group);
+	return true;
 }
 
 function filter_suggestions_open() {
@@ -208,6 +218,10 @@ function on_keydown(e) {
 	if (key === copy_link_key()) {
 		consume(e);
 		copy_markdown_link();
+		return;
+	}
+	if (key === "shift+enter" && add_filter_row()) {
+		consume(e);
 		return;
 	}
 	if (key === "mod+enter") {
@@ -322,7 +336,8 @@ function shortcuts_html() {
 			[keys_html(["enter"]), __("Open selected row")],
 			[keys_html(["x"]), __("Toggle row checkbox")],
 			[keys_html(["/"]), __("Focus list filter")],
-			[keys_html(["f"]), __("Open filters with a new row")],
+			[keys_html(["f"]), __("Open filters")],
+			[keys_html(["shift+enter"]), __("Add a filter row")],
 			[`${keys_html(["mod+enter"])} / ${keys_html(["esc"])}`, __("Apply and close filters")],
 			[keys_html(["esc"]), __("Clear the focused filter field")],
 			[keys_html(["shift+x"]), __("Clear all filters")],
