@@ -5,7 +5,7 @@ import { keys_html } from "./labels";
 import { Palette } from "./palette";
 import "./search_nav";
 
-const LIST_KEYS = new Set(["j", "k", "x", "/", "shift+x"]);
+const LIST_KEYS = new Set(["j", "k", "x", "/", "shift+x", "f"]);
 const HIDDEN_FRAPPE_SHORTCUTS = new Set(["ctrl+s", "shift+/"]);
 
 export const palette = new Palette();
@@ -117,16 +117,45 @@ function clear_filter_field() {
 	return true;
 }
 
+function filter_group() {
+	return list_view()?.filter_area?.filter_list;
+}
+
+function filter_popover_open() {
+	return filter_group()?.wrapper?.is(":visible") || false;
+}
+
+function open_filter_popover(group) {
+	const had_filters = group.filters.length > 0;
+	group.filter_button.one("shown.bs.popover", () => {
+		if (had_filters) group.wrapper.find(".add-filter").trigger("click");
+		group.filters.at(-1)?.fieldselect?.$input?.trigger("focus").trigger("select");
+	});
+	group.filter_button.trigger("click");
+}
+
+function filter_suggestions_open() {
+	return filter_group().wrapper.find(".awesomplete ul:not([hidden])").length > 0;
+}
+
+function close_filter_popover() {
+	if (!filter_popover_open()) return false;
+	if (filter_group().wrapper[0].contains(document.activeElement)) document.activeElement.blur();
+	filter_group().hide_popover();
+	return true;
+}
+
 function handle_filter_key(key) {
 	const list = list_view();
 	if (!list) return false;
 	if (key === "/") focus_filter(list);
+	else if (key === "f") close_filter_popover() || open_filter_popover(list.filter_area.filter_list);
 	else list.filter_area?.filter_x_button?.trigger("click");
 	return true;
 }
 
 function handle_list_key(key) {
-	if (key === "/" || key === "shift+x") return handle_filter_key(key);
+	if (key === "/" || key === "shift+x" || key === "f") return handle_filter_key(key);
 	const list = current_list();
 	if (!list) return false;
 	const rows = list_rows(list);
@@ -182,13 +211,15 @@ function on_keydown(e) {
 		return;
 	}
 	if (key === "mod+enter") {
-		if (save_form()) consume(e);
+		if (close_filter_popover() || save_form()) consume(e);
 		return;
 	}
 	if (key === "esc") {
 		commands().reset();
 		hide_hint();
-		if (clear_filter_field()) consume(e);
+		if (filter_popover_open()) {
+			if (!filter_suggestions_open() && close_filter_popover()) consume(e);
+		} else if (clear_filter_field()) consume(e);
 		return;
 	}
 	if (e.repeat || is_typing_target(document.activeElement) || dialog_open()) return;
@@ -291,6 +322,8 @@ function shortcuts_html() {
 			[keys_html(["enter"]), __("Open selected row")],
 			[keys_html(["x"]), __("Toggle row checkbox")],
 			[keys_html(["/"]), __("Focus list filter")],
+			[keys_html(["f"]), __("Open filters with a new row")],
+			[`${keys_html(["mod+enter"])} / ${keys_html(["esc"])}`, __("Apply and close filters")],
 			[keys_html(["esc"]), __("Clear the focused filter field")],
 			[keys_html(["shift+x"]), __("Clear all filters")],
 		]),
