@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/EffizienzAgent/keynav/compare/v0.5.0...v0.6.0) (2026-11-06)
+
+
+### Features
+
+* add a filter row with Shift+Enter ([8e7a61a](https://github.com/EffizienzAgent/keynav/commit/8e7a61a604f8e0eb3749f2ddff6dc59fa7bb8a97))
+
 ## [0.5.0](https://github.com/EffizienzAgent/keynav/compare/v0.4.1...v0.5.0) (2026-11-06)
 
 
